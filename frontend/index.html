@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GRAIL — AI Personal Stylist</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="logo.png" alt="GRAIL" class="nav-logo-img" />
+      GRAIL
+    </div>
+    <div class="nav-links">
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#vault" class="nav-link">Vault</a>
+      <a href="#stylist" class="nav-link">Stylist</a>
+      <a href="#trends" class="nav-link">Trends</a>
+      <a href="#shop" class="nav-link">Shop</a>
+    </div>
+    <div class="nav-actions">
+      <div class="status-dot" id="serverStatus" title="Server status"></div>
+      <button class="btn-primary" onclick="showSection('vault')">
+        <i class="fas fa-plus"></i> Add Garment
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="home" class="section active">
+    <div class="hero">
+      <div class="hero-bg">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+      </div>
+      <div class="hero-content">
+        <div class="hero-badge">
+          <img src="logo.png" alt="" style="width:20px;height:20px;object-fit:contain;border-radius:4px" />
+          AI-Powered Fashion
+        </div>
+        <h1 class="hero-title">
+          Your Personal<br/>
+          <span class="gradient-text">AI Stylist</span>
+        </h1>
+        <p class="hero-sub">
+          Upload your wardrobe. Get God-tier outfit recommendations powered by real-time global trend data.
+        </p>
+        <div class="hero-btns">
+          <button class="btn-primary btn-lg" onclick="showSection('vault')">
+            <i class="fas fa-tshirt"></i> Build My Vault
+          </button>
+          <button class="btn-ghost btn-lg" onclick="showSection('stylist')">
+            <i class="fas fa-magic"></i> Get Styled
+          </button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-num" id="statGarments">0</span><span class="stat-label">Garments</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-num" id="statOutfits">0</span><span class="stat-label">Outfits</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-num" id="statTrends">0</span><span class="stat-label">Trends</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="phone-mockup">
+          <div class="phone-screen">
+            <div class="outfit-preview" id="heroOutfitPreview">
+              <div class="outfit-card-mini">
+                <div class="garment-top" style="background: linear-gradient(135deg, #667eea, #764ba2)"></div>
+                <div class="garment-bottom" style="background: linear-gradient(135deg, #f093fb, #f5576c)"></div>
+                <div class="outfit-score-mini">
+                  <i class="fas fa-fire"></i> 94%
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VAULT -->
+  <section id="vault" class="section">
+    <div class="section-header">
+      <h2><i class="fas fa-layer-group"></i> My Vault</h2>
+      <p>Your digital wardrobe — every piece, perfectly catalogued</p>
+    </div>
+
+    <div class="upload-zone" id="uploadZone">
+      <div class="upload-inner">
+        <div class="upload-icon">
+          <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+        <h3>Drop a garment photo here</h3>
+        <p>or click to browse — JPG, PNG, WebP up to 10MB</p>
+        <input type="file" id="garmentFile" accept="image/jpeg,image/png,image/webp" hidden />
+        <button class="btn-primary" onclick="document.getElementById('garmentFile').click()">
+          <i class="fas fa-plus"></i> Choose Photo
+        </button>
+      </div>
+    </div>
+
+    <div class="upload-result hidden" id="uploadResult"></div>
+
+    <div class="garment-grid" id="garmentGrid">
+      <div class="empty-state" id="vaultEmpty">
+        <i class="fas fa-tshirt"></i>
+        <p>Your vault is empty — add your first garment above!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STYLIST -->
+  <section id="stylist" class="section">
+    <div class="section-header">
+      <h2><i class="fas fa-magic"></i> Stylist Feed</h2>
+      <p>AI-ranked outfit combinations from your wardrobe</p>
+    </div>
+
+    <div class="stylist-controls">
+      <button class="btn-primary" onclick="generateOutfits()">
+        <i class="fas fa-sync-alt"></i> Generate Outfits
+      </button>
+      <div class="sort-pills">
+        <span class="pill active">Top Picks</span>
+        <span class="pill">Trending</span>
+        <span class="pill">Harmony</span>
+      </div>
+    </div>
+
+    <div class="outfit-grid" id="outfitGrid">
+      <div class="empty-state" id="stylistEmpty">
+        <i class="fas fa-magic"></i>
+        <p>Click "Generate Outfits" to see your AI-styled looks!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRENDS -->
+  <section id="trends" class="section">
+    <div class="section-header">
+      <h2><i class="fas fa-fire"></i> Global Trends</h2>
+      <p>Real-time fashion signals from around the world</p>
+    </div>
+
+    <div class="trends-toolbar">
+      <button class="btn-primary" onclick="loadTrends()">
+        <i class="fas fa-sync-alt"></i> Refresh Trends
+      </button>
+      <div class="stale-badge hidden" id="staleBadge">
+        <i class="fas fa-clock"></i> Trends may be outdated
+      </div>
+    </div>
+
+    <div class="trends-grid" id="trendsGrid">
+      <div class="empty-state">
+        <i class="fas fa-globe"></i>
+        <p>Loading trend data...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOP / MISSING LINKS -->
+  <section id="shop" class="section">
+    <div class="section-header">
+      <h2><i class="fas fa-shopping-bag"></i> Shopping List</h2>
+      <p>The one item that unlocks the most new outfits</p>
+    </div>
+
+    <div class="shop-controls">
+      <button class="btn-primary" onclick="loadMissingLinks()">
+        <i class="fas fa-search"></i> Find Missing Links
+      </button>
+    </div>
+
+    <div class="missing-grid" id="missingGrid">
+      <div class="empty-state" id="shopEmpty">
+        <i class="fas fa-shopping-bag"></i>
+        <p>Click "Find Missing Links" to discover what to buy next!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLOR CORRECTION MODAL -->
+  <div class="modal-overlay hidden" id="colorModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3><i class="fas fa-palette"></i> Correct Garment Color</h3>
+        <button class="modal-close" onclick="closeColorModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <p>We couldn't detect this garment's color. Pick the correct one:</p>
+        <div class="color-picker-wrap">
+          <input type="color" id="colorPicker" value="#1a2b3c" />
+          <span id="colorHexDisplay">#1A2B3C</span>
+        </div>
+        <div class="color-swatches">
+          <div class="swatch" style="background:#000000" onclick="setSwatch('#000000')"></div>
+          <div class="swatch" style="background:#FFFFFF;border:1px solid #ccc" onclick="setSwatch('#FFFFFF')"></div>
+          <div class="swatch" style="background:#FF0000" onclick="setSwatch('#FF0000')"></div>
+          <div class="swatch" style="background:#0000FF" onclick="setSwatch('#0000FF')"></div>
+          <div class="swatch" style="background:#008000" onclick="setSwatch('#008000')"></div>
+          <div class="swatch" style="background:#FFFF00" onclick="setSwatch('#FFFF00')"></div>
+          <div class="swatch" style="background:#FFA500" onclick="setSwatch('#FFA500')"></div>
+          <div class="swatch" style="background:#800080" onclick="setSwatch('#800080')"></div>
+          <div class="swatch" style="background:#FFC0CB" onclick="setSwatch('#FFC0CB')"></div>
+          <div class="swatch" style="background:#A52A2A" onclick="setSwatch('#A52A2A')"></div>
+          <div class="swatch" style="background:#808080" onclick="setSwatch('#808080')"></div>
+          <div class="swatch" style="background:#C8A96E" onclick="setSwatch('#C8A96E')"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" onclick="closeColorModal()">Cancel</button>
+        <button class="btn-primary" onclick="submitColorCorrection()">
+          <i class="fas fa-check"></i> Save Color
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- LOADER -->
+  <div class="loader-overlay hidden" id="loader">
+    <div class="loader-spinner"></div>
+    <p id="loaderText">Loading...</p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

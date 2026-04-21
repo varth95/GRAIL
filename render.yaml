@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: grail-backend
+    runtime: python
+    rootDir: GRAIL/backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite+aiosqlite:///./grail.db
+      - key: SECRET_KEY
+        value: grail-secret-key-2024
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 60
