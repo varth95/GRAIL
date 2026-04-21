@@ -22,15 +22,22 @@ document.addEventListener('DOMContentLoaded', () => {
 async function checkServer() {
   const dot = document.getElementById('serverStatus');
   try {
-    const r = await fetch(`${API}/health`, { signal: AbortSignal.timeout(3000) });
+    const r = await fetch(`${API}/health`, { signal: AbortSignal.timeout(15000) });
     if (r.ok) {
       dot.classList.add('online');
       dot.title = 'Server online';
       updateStats();
+      loadTrends(); // auto-load trends when server wakes up
     } else throw new Error();
   } catch {
     dot.classList.remove('online');
-    dot.title = 'Server offline — run: uvicorn app.main:app --reload';
+    dot.title = 'Server is waking up... please wait 30 seconds and refresh';
+    // Show a helpful message
+    document.getElementById('trendsGrid').innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-moon"></i>
+        <p>Server is waking up — please wait 30 seconds then click Refresh Trends</p>
+      </div>`;
   }
 }
 
